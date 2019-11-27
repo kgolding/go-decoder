@@ -1,14 +1,3 @@
-# Go-Decoder
-
-Decoder takes a byte array and provides safe & simple functions to read different types, and keeps track of the last read position.
-
-**What about go's built in binary package?**
-Go's built in binary package allows decoding and encoding fixed lenghts packets from/to structs,
-but it does not handle variable lenght data as is often seen in over the wire protocols.
-
-## Usage
-
-````
 package main
 
 import (
@@ -110,18 +99,3 @@ func Example1(buf []byte) {
 	log.Println("Read ETX byte ok")
 
 }
-````
-
-## Supported types
-
-* Byte aka uint8
-* Uint16
-* Uint32
-* Bit8 aka 8 bits of a byte in an array
-* CString aka NULL terminated
-* String with single byte length prefix
-* String with uint16 length prefix
-
-## ASCII control consts
-
-Also in this package is a list of ASCII control characters as consts, such as decoder.STX which is the byte 0x02.
