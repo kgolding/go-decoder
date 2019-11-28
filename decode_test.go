@@ -1,12 +1,33 @@
 package decoder
 
 import (
+	"bytes"
 	"encoding/binary"
 	"math"
 	"testing"
 )
 
 var data1 = []byte{0x00, 0x01, 0x02, 0x03, 0x04, 0x05}
+
+func Test_Bytes(t *testing.T) {
+	p := New(data1)
+	p.Byte() // skip 1
+	b := p.Bytes(3)
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+	if bytes.Compare(b, data1[1:4]) != 0 {
+		t.Errorf("expected % X got % X", b, data1[1:4])
+	}
+	c := p.Byte()
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+	if c != 0x04 {
+		t.Errorf("expected % X got % X", 0x04, c)
+	}
+
+}
 
 func Test_Float64(t *testing.T) {
 	float := float64(12345678.87654321)
