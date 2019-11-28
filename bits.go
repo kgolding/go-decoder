@@ -3,7 +3,7 @@ package decoder
 // Bits8 returns an array of bool where [0] is the right hand bit at the internal pointer and increments it accordingly
 func (p *Packet) Bits8() []bool {
 	b := p.Byte()
-	if p.err != nil {
+	if p.Err != nil {
 		return nil
 	}
 	v := make([]bool, 8)

@@ -2,24 +2,59 @@ package decoder
 
 import (
 	"encoding/binary"
+	"math"
 	"testing"
 )
 
 var data1 = []byte{0x00, 0x01, 0x02, 0x03, 0x04, 0x05}
 
+func Test_Float64(t *testing.T) {
+	float := float64(12345678.87654321)
+
+	b := make([]byte, 8)
+	binary.BigEndian.PutUint64(b, math.Float64bits(float))
+
+	p := New(b)
+	f := p.Float64()
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+	if f != float {
+		t.Errorf("expected %f got %f", float, f)
+	}
+	binary.BigEndian.PutUint64(b, math.Float64bits(f))
+}
+
+func Test_Float32(t *testing.T) {
+	float := float32(1234.4321)
+
+	b := make([]byte, 4)
+	binary.BigEndian.PutUint32(b, math.Float32bits(float))
+
+	p := New(b)
+	f := p.Float32()
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+	if f != float {
+		t.Errorf("expected %f got %f", float, f)
+	}
+	binary.BigEndian.PutUint32(b, math.Float32bits(f))
+}
+
 func Test_CString(t *testing.T) {
 	p := New([]byte{0x31, 0x32, 0x33, 0x00, 0xff}) // "123" 0x00, 0xff
 	s := p.CString()
-	if p.err != nil {
-		t.Errorf("got unexpected err: %s", p.err)
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
 	}
 	if s != "123" {
 		t.Errorf("expected string '123' got '%s'", s)
 	}
 
 	b := p.Byte()
-	if p.err != nil {
-		t.Errorf("got unexpected err: %s", p.err)
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
 	}
 	if b != 0xff {
 		t.Errorf("expected 0xff got %X", b)
@@ -28,25 +63,24 @@ func Test_CString(t *testing.T) {
 	// Test bad string
 	p = New([]byte{0x31, 0x32, 0x33, 0xff}) // "123" 0xff
 	s = p.CString()
-	if p.err != ErrReadPastEndData {
-		t.Errorf("expected err: %s", p.err)
+	if p.Err != ErrReadPastEndData {
+		t.Errorf("expected err: %s", p.Err)
 	}
-
 }
 
 func Test_StringPrefixUint16Len(t *testing.T) {
 	p := New([]byte{0x00, 0x03, 0x31, 0x32, 0x33, 0xff}) // 0x03 "123" 0xff
 	s := p.StringPrefixUint16Len()
-	if p.err != nil {
-		t.Errorf("got unexpected err: %s", p.err)
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
 	}
 	if s != "123" {
 		t.Errorf("expected string '123' got '%s'", s)
 	}
 
 	b := p.Byte()
-	if p.err != nil {
-		t.Errorf("got unexpected err: %s", p.err)
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
 	}
 	if b != 0xff {
 		t.Errorf("expected 0xff got %X", b)
@@ -64,7 +98,7 @@ func Test_StringPrefixByteLen(t *testing.T) {
 	}
 
 	b := p.Byte()
-	if p.err != nil {
+	if p.Err != nil {
 		t.Errorf("got unexpected err: %s", err)
 	}
 	if b != 0xff {
@@ -105,8 +139,8 @@ func Test_Bit8(t *testing.T) {
 	p.Byte() // move past first byte
 
 	v := p.Bits8()
-	if p.err != nil {
-		t.Errorf("got unexpected err: %s", p.err)
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
 	}
 	if len(v) != 8 {
 		t.Errorf("expected 8 bits got %d", len(v))
@@ -135,8 +169,8 @@ func Test_Byte_Reset(t *testing.T) {
 			if v != b {
 				t.Errorf("expected %X got %X", b, v)
 			}
-			if p.err != nil {
-				t.Errorf("got unexpected err: %s", p.err)
+			if p.Err != nil {
+				t.Errorf("got unexpected err: %s", p.Err)
 			}
 		}
 	}
@@ -155,8 +189,8 @@ func Test_Uint16(t *testing.T) {
 		if v != d {
 			t.Errorf("expected %X got %X", d, v)
 		}
-		if p.err != nil {
-			t.Errorf("got unexpected err: %s", p.err)
+		if p.Err != nil {
+			t.Errorf("got unexpected err: %s", p.Err)
 		}
 	}
 }
@@ -170,8 +204,8 @@ func Test_Uint32(t *testing.T) {
 		if v != d {
 			t.Errorf("expected %X got %X", d, v)
 		}
-		if p.err != nil {
-			t.Errorf("got unexpected err: %s", p.err)
+		if p.Err != nil {
+			t.Errorf("got unexpected err: %s", p.Err)
 		}
 	}
 }
