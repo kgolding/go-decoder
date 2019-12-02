@@ -30,6 +30,17 @@ func New(b []byte) *Packet {
 	}
 }
 
+// Index returns the current pointer position
+func (p *Packet) Index() int {
+	return p.idx
+}
+
+// PeekBytes returns the []byte data
+func (p *Packet) PeekBytes() []byte {
+	return p.buf
+}
+
+// PeekRemainingBytes returns the bytes from the current pointer postion
 func (p *Packet) PeekRemainingBytes() []byte {
 	return p.buf[p.idx:]
 }
