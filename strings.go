@@ -2,13 +2,13 @@ package decoder
 
 // StringPrefixByteLen returns the string at internal pointer using the first byte as it's lenght and increments it accordingly
 func (p *Packet) StringPrefixByteLen() (string, error) {
-	if p.idx >= p.lenght {
+	if p.idx >= p.length {
 		p.Err = ErrReadPastEndData
 		return "", p.Err
 	}
 	l := int(p.buf[p.idx])
 	p.idx++
-	if p.idx+l >= p.lenght {
+	if p.idx+l >= p.length {
 		p.Err = ErrReadPastEndData
 		return "", p.Err
 	}
@@ -24,7 +24,7 @@ func (p *Packet) StringPrefixUint16Len() string {
 	if p.Err != nil {
 		return ""
 	}
-	if p.idx+l >= p.lenght {
+	if p.idx+l >= p.length {
 		p.Err = ErrReadPastEndData
 		return ""
 	}
@@ -36,7 +36,7 @@ func (p *Packet) StringPrefixUint16Len() string {
 // CString returns the string at internal pointer (terminated with a 0x00) and increments it accordingly
 func (p *Packet) CString() string {
 	idxStart := p.idx
-	for idx := p.idx; idx < p.lenght; idx++ {
+	for idx := p.idx; idx < p.length; idx++ {
 		if p.buf[idx] == 0x00 {
 			p.idx = idx + 1
 			return string(p.buf[idxStart:idx])

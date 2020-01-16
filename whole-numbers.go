@@ -2,7 +2,7 @@ package decoder
 
 // Byte returns the value at the internal pointer and increments it accordingly
 func (p *Packet) Byte() byte {
-	if p.idx >= p.lenght {
+	if p.idx >= p.length {
 		p.Err = ErrReadPastEndData
 		return 0
 	}
@@ -13,7 +13,7 @@ func (p *Packet) Byte() byte {
 
 // Uint16 returns the value at the internal pointer and increments it accordingly
 func (p *Packet) Uint16() uint16 {
-	if p.idx+1 >= p.lenght {
+	if p.idx+1 >= p.length {
 		p.Err = ErrReadPastEndData
 		return 0
 	}
@@ -24,7 +24,7 @@ func (p *Packet) Uint16() uint16 {
 
 // Uint32 returns the value at the internal pointer and increments it accordingly
 func (p *Packet) Uint32() uint32 {
-	if p.idx+3 >= p.lenght {
+	if p.idx+3 >= p.length {
 		p.Err = ErrReadPastEndData
 		return 0
 	}
@@ -35,7 +35,7 @@ func (p *Packet) Uint32() uint32 {
 
 // Uint64 returns the value at the internal pointer and increments it accordingly
 func (p *Packet) Uint64() uint64 {
-	if p.idx+7 >= p.lenght {
+	if p.idx+7 >= p.length {
 		p.Err = ErrReadPastEndData
 		return 0
 	}
