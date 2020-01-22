@@ -19,6 +19,7 @@ type Packet struct {
 }
 
 var ErrReadPastEndData = errors.New("read past of end of data")
+var ErrReadInvalidLength = errors.New("invalid length")
 
 // New returns a loaded packet ready for reading
 func New(b []byte) *Packet {
@@ -43,7 +44,7 @@ func (p *Packet) Seek(b []byte) bool {
 	}
 	for i := p.idx; i < len(p.buf)+len(b)-1; i++ {
 		if p.buf[i] == b[0] && bytes.Compare(p.buf[i:i+len(b)], b) == 0 {
-			p.idx = i + 1
+			p.idx = i
 			return true
 		}
 	}
@@ -63,6 +64,11 @@ func (p *Packet) PeekBytes() []byte {
 // PeekRemainingBytes returns the bytes from the current pointer postion
 func (p *Packet) PeekRemainingBytes() []byte {
 	return p.buf[p.idx:]
+}
+
+// RemainingLength returns the number of bytes from the current pointer postion
+func (p *Packet) RemainingLength() int {
+	return len(p.buf) - p.idx
 }
 
 // SetLittleEndian set future read to be in little endian
