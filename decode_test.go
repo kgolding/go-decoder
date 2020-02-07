@@ -127,6 +127,27 @@ func Test_StringPrefixByteLen(t *testing.T) {
 	}
 }
 
+func Test_StringZeroPadded(t *testing.T) {
+	p := New([]byte{0x03, 0x31, 0x32, 0x33, 0x00, 0x00, 0xff}) // 0x03 "123.." 0xff
+	p.Byte()                                                   // STX
+
+	s, err := p.StringZeroPadded(5)
+	if err != nil {
+		t.Errorf("got unexpected err: %s", err)
+	}
+	if s != "123" {
+		t.Errorf("expected string '123' got '%s'", s)
+	}
+
+	b := p.Byte()
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", err)
+	}
+	if b != 0xff {
+		t.Errorf("expected 0xff got %X", b)
+	}
+}
+
 func Test_Rewind(t *testing.T) {
 	p := New(data1)
 
