@@ -110,9 +110,9 @@ func Test_StringPrefixUint16Len(t *testing.T) {
 
 func Test_StringPrefixByteLen(t *testing.T) {
 	p := New([]byte{0x03, 0x31, 0x32, 0x33, 0xff}) // 0x03 "123" 0xff
-	s, err := p.StringPrefixByteLen()
-	if err != nil {
-		t.Errorf("got unexpected err: %s", err)
+	s := p.StringPrefixByteLen()
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
 	}
 	if s != "123" {
 		t.Errorf("expected string '123' got '%s'", s)
@@ -120,7 +120,7 @@ func Test_StringPrefixByteLen(t *testing.T) {
 
 	b := p.Byte()
 	if p.Err != nil {
-		t.Errorf("got unexpected err: %s", err)
+		t.Errorf("got unexpected err: %s", p.Err)
 	}
 	if b != 0xff {
 		t.Errorf("expected 0xff got %X", b)
@@ -131,9 +131,9 @@ func Test_StringZeroPadded(t *testing.T) {
 	p := New([]byte{0x03, 0x31, 0x32, 0x33, 0x00, 0x00, 0xff}) // 0x03 "123.." 0xff
 	p.Byte()                                                   // STX
 
-	s, err := p.StringZeroPadded(5)
-	if err != nil {
-		t.Errorf("got unexpected err: %s", err)
+	s := p.StringZeroPadded(5)
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
 	}
 	if s != "123" {
 		t.Errorf("expected string '123' got '%s'", s)
@@ -141,7 +141,7 @@ func Test_StringZeroPadded(t *testing.T) {
 
 	b := p.Byte()
 	if p.Err != nil {
-		t.Errorf("got unexpected err: %s", err)
+		t.Errorf("got unexpected err: %s", p.Err)
 	}
 	if b != 0xff {
 		t.Errorf("expected 0xff got %X", b)

@@ -5,27 +5,27 @@ import (
 )
 
 // StringPrefixByteLen returns the string at internal pointer using the first byte as it's lenght and increments it accordingly
-func (p *Packet) StringPrefixByteLen() (string, error) {
+func (p *Packet) StringPrefixByteLen() string {
 	if p.idx >= p.length {
 		p.Err = ErrReadPastEndData
-		return "", p.Err
+		return ""
 	}
 	l := int(p.buf[p.idx])
 	p.idx++
 	if p.idx+l >= p.length {
 		p.Err = ErrReadPastEndData
-		return "", p.Err
+		return ""
 	}
 	v := string(p.buf[p.idx : p.idx+l])
 	p.idx += l
-	return v, nil
+	return v
 }
 
 // StringZeroPadded returns the null padded string at internal pointer
-func (p *Packet) StringZeroPadded(fixedLength int) (string, error) {
+func (p *Packet) StringZeroPadded(fixedLength int) string {
 	if p.idx+fixedLength >= p.length {
 		p.Err = ErrReadPastEndData
-		return "", p.Err
+		return ""
 	}
 	idx := p.idx
 	p.idx += fixedLength
@@ -34,9 +34,9 @@ func (p *Packet) StringZeroPadded(fixedLength int) (string, error) {
 
 	nullIndex := bytes.IndexByte(b, 0x00)
 	if nullIndex == -1 {
-		return string(b), nil
+		return string(b)
 	}
-	return string(p.buf[idx : idx+nullIndex]), nil
+	return string(p.buf[idx : idx+nullIndex])
 }
 
 // StringPrefixUint16Len returns the string at internal pointer using the first 2 bytes as it's lenght and increments it accordingly
