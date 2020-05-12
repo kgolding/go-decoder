@@ -27,6 +27,38 @@ func Test_Bytes(t *testing.T) {
 		t.Errorf("expected % X got % X", 0x04, c)
 	}
 
+	p = New(data1)
+	b = p.Bytes(0)
+	if bytes.Compare(b, []byte{}) != 0 {
+		t.Errorf("got % X expected {}", b)
+	}
+
+	b = p.Bytes(1)
+	e := data1[0:1]
+	if bytes.Compare(b, e) != 0 {
+		t.Errorf("got % X expected % X", b, e)
+	}
+
+	b = p.Bytes(2)
+	e = data1[1:3]
+	if bytes.Compare(b, e) != 0 {
+		t.Errorf("got % X expected % X", b, e)
+	}
+
+	b = p.Bytes(3)
+	e = data1[3:6]
+	if bytes.Compare(b, e) != 0 {
+		t.Errorf("got % X expected % X", b, e)
+	}
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+
+	b = p.Bytes(9999)
+	if p.Err == nil {
+		t.Error("expected error reading past ed of data")
+	}
+
 }
 
 func Test_Float64(t *testing.T) {
