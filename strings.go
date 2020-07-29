@@ -4,6 +4,24 @@ import (
 	"bytes"
 )
 
+// StringByDelimiter returns the string at internal pointer using the given delimiter at the end marker
+func (p *Packet) StringByDelimiter(delimiter byte) string {
+	idx := p.idx
+
+	index := bytes.IndexByte(p.buf[idx:], delimiter)
+	if index == -1 {
+		return ""
+	}
+
+	if p.idx+index >= p.length {
+		p.Err = ErrReadPastEndData
+		return ""
+	}
+
+	p.idx += index + 1
+	return string(p.buf[idx : idx+index])
+}
+
 // StringPrefixByteLen returns the string at internal pointer using the first byte as it's lenght and increments it accordingly
 func (p *Packet) StringPrefixByteLen() string {
 	if p.idx >= p.length {

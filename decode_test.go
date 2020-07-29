@@ -180,6 +180,33 @@ func Test_StringZeroPadded(t *testing.T) {
 	}
 }
 
+func Test_StringByDelimiter(t *testing.T) {
+	p := New([]byte{0xff, 0x31, 0x32, 0x33, 0x0A, 0xff}) // 0xff "123" LF 0xff
+	p.Byte()                                             // clear first dummy byte
+
+	s := p.StringByDelimiter(0x0A)
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+	if s != "123" {
+		t.Errorf("expected string '123' got '%s'", s)
+	}
+
+	b := p.Byte()
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+	if b != 0xff {
+		t.Errorf("expected 0xff got %X", b)
+	}
+
+	// Read past end
+	s = p.StringByDelimiter(0x0A)
+	if s != "" {
+		t.Errorf("expected string '' got '%s'", s)
+	}
+}
+
 func Test_Rewind(t *testing.T) {
 	p := New(data1)
 
