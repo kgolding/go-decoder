@@ -77,5 +77,12 @@ func Test_AsciiUInt(t *testing.T) {
 		if f != test.expect {
 			t.Errorf("expected %d got %d: '%s'", test.expect, f, string(test.input))
 		}
+		if !test.shouldError { // Check that the idx has been moved forward
+			l := len(fmt.Sprintf("%d", f))
+			q := len(test.input) - len(p.PeekRemainingBytes())
+			if q != l {
+				t.Errorf("expected bytes used to be %d got %d: '%s'", l, q, string(test.input))
+			}
+		}
 	}
 }

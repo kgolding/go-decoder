@@ -44,6 +44,7 @@ func (p *Packet) AsciiUInt() (v uint) {
 
 	for _, c := range p.buf {
 		if c >= '0' && c <= '9' {
+			p.idx++
 			nodata = false
 			v = v * 10
 			v += uint(c - '0')
