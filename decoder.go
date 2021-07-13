@@ -20,6 +20,7 @@ type Packet struct {
 
 var ErrReadPastEndData = errors.New("read past of end of data")
 var ErrReadInvalidLength = errors.New("invalid length")
+var ErrReadNoData = errors.New("no data")
 
 // New returns a loaded packet ready for reading
 func New(b []byte) *Packet {
@@ -54,6 +55,11 @@ func (p *Packet) Seek(b []byte) bool {
 // Index returns the current pointer position
 func (p *Packet) Index() int {
 	return p.idx
+}
+
+// EOF returns true if the pointer is at the end of the data
+func (p *Packet) EOF() bool {
+	return p.idx >= len(p.buf)
 }
 
 // PeekBytes returns the []byte data
