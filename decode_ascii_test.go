@@ -22,6 +22,7 @@ func Test_AsciiInt(t *testing.T) {
 		{123, false, []byte("123X")},
 		{-123, false, []byte("-123")},
 		{-123, false, []byte("-123X")},
+		{1, false, []byte{0x31, 0x02, 0x31}},
 	}
 
 	for _, test := range tests {
@@ -63,6 +64,7 @@ func Test_AsciiUInt(t *testing.T) {
 		{123, false, []byte("123X")},
 		{0, true, []byte("-123")},
 		{0, true, []byte("-123X")},
+		{1, false, []byte{0x31, 0x02, 0x31}},
 	}
 
 	for _, test := range tests {

@@ -35,7 +35,7 @@ func (p *Packet) Uint24() uint32 {
 	// copy 3 bytes into the middle of a 5 byte slice making it easy to read it as little or big endian
 	b := make([]byte, 5)
 	copy(b[1:], p.buf[p.idx:p.idx+3])
-	p.idx += 4
+	p.idx += 3
 	if p.endian == binary.BigEndian {
 		return p.endian.Uint32(b[0:])
 	}
