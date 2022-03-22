@@ -113,8 +113,17 @@ func Test_CString(t *testing.T) {
 		t.Errorf("expected 0xff got %X", b)
 	}
 
+	p = New([]byte{0x31, 0x32, 0x33, 0x00}) // "123" 0x00
+	s = p.CString()
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+	if s != "123" {
+		t.Errorf("expected string '123' got '%s'", s)
+	}
+
 	// Test bad string
-	p = New([]byte{0x31, 0x32, 0x33, 0xff}) // "123" 0xff
+	p = New([]byte{0x31, 0x32, 0x33, 0xff}) // "123"
 	s = p.CString()
 	if p.Err != ErrReadPastEndData {
 		t.Errorf("expected err: %s", p.Err)
@@ -138,6 +147,15 @@ func Test_StringPrefixUint16Len(t *testing.T) {
 	if b != 0xff {
 		t.Errorf("expected 0xff got %X", b)
 	}
+
+	p = New([]byte{0x00, 0x03, 0x31, 0x32, 0x33}) // 0x03 "123"
+	s = p.StringPrefixUint16Len()
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+	if s != "123" {
+		t.Errorf("expected string '123' got '%s'", s)
+	}
 }
 
 func Test_StringPrefixByteLen(t *testing.T) {
@@ -157,6 +175,16 @@ func Test_StringPrefixByteLen(t *testing.T) {
 	if b != 0xff {
 		t.Errorf("expected 0xff got %X", b)
 	}
+
+	p = New([]byte{0x03, 0x31, 0x32, 0x33}) // 0x03 "123"
+	s = p.StringPrefixByteLen()
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+	if s != "123" {
+		t.Errorf("expected string '123' got '%s'", s)
+	}
+
 }
 
 func Test_StringZeroPadded(t *testing.T) {
@@ -178,6 +206,16 @@ func Test_StringZeroPadded(t *testing.T) {
 	if b != 0xff {
 		t.Errorf("expected 0xff got %X", b)
 	}
+
+	p = New([]byte{0x31, 0x32, 0x33, 0x00})
+	s = p.StringZeroPadded(4)
+	if p.Err != nil {
+		t.Errorf("got unexpected err: %s", p.Err)
+	}
+	if s != "123" {
+		t.Errorf("expected string '123' got '%s'", s)
+	}
+
 }
 
 func Test_StringByDelimiter(t *testing.T) {

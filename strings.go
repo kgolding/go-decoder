@@ -30,7 +30,7 @@ func (p *Packet) StringPrefixByteLen() string {
 	}
 	l := int(p.buf[p.idx])
 	p.idx++
-	if p.idx+l >= p.length {
+	if p.idx+l > p.length {
 		p.Err = ErrReadPastEndData
 		return ""
 	}
@@ -41,7 +41,7 @@ func (p *Packet) StringPrefixByteLen() string {
 
 // StringZeroPadded returns the null padded string at internal pointer
 func (p *Packet) StringZeroPadded(fixedLength int) string {
-	if p.idx+fixedLength >= p.length {
+	if p.idx+fixedLength > p.length {
 		p.Err = ErrReadPastEndData
 		return ""
 	}
@@ -64,7 +64,7 @@ func (p *Packet) StringPrefixUint16Len() string {
 	if p.Err != nil {
 		return ""
 	}
-	if p.idx+l >= p.length {
+	if p.idx+l > p.length {
 		p.Err = ErrReadPastEndData
 		return ""
 	}
