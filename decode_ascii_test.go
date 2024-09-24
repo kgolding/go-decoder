@@ -5,6 +5,24 @@ import (
 	"testing"
 )
 
+func Test_AsciiIntUintWithPrependedData(t *testing.T) {
+	s := "abcd#1234xxx"
+
+	dec := New([]byte(s))
+	dec.StringByDelimiter('#')
+	x := dec.AsciiInt()
+	if x != 1234 {
+		t.Errorf("expected 1234, but got %d", x)
+	}
+
+	dec = New([]byte(s))
+	dec.StringByDelimiter('#')
+	z := dec.AsciiUInt()
+	if z != 1234 {
+		t.Errorf("expected 1234, but got %d", z)
+	}
+}
+
 func Test_AsciiInt(t *testing.T) {
 	tests := []struct {
 		expect      int

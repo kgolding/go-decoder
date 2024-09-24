@@ -14,17 +14,17 @@ func (p *Packet) AsciiInt() (v int) {
 		}
 	}()
 
-	for cnt, c := range p.buf {
-		if cnt == 0 && c == '-' {
+	for idx := p.idx; idx < p.length; idx++ {
+		c := p.buf[idx]
+		if idx == p.idx && c == '-' {
 			negate = true
-			p.idx++
 		} else {
 			if c >= '0' && c <= '9' {
-				p.idx++
 				nodata = false
 				v = v * 10
 				v += int(c - '0')
 			} else {
+				p.idx = idx
 				return
 			}
 		}
@@ -42,13 +42,14 @@ func (p *Packet) AsciiUInt() (v uint) {
 		}
 	}()
 
-	for _, c := range p.buf {
+	for idx := p.idx; idx < p.length; idx++ {
+		c := p.buf[idx]
 		if c >= '0' && c <= '9' {
-			p.idx++
 			nodata = false
 			v = v * 10
 			v += uint(c - '0')
 		} else {
+			p.idx = idx
 			return
 		}
 	}
