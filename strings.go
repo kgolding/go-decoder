@@ -85,3 +85,21 @@ func (p *Packet) CString() string {
 	p.Err = ErrReadPastEndData
 	return ""
 }
+
+// StringByWhitelist returns the string at internal pointer using the given whitelist bytes
+func (p *Packet) StringByWhitelist(whitelist []byte) string {
+	idxStart := p.idx
+	var idx int
+	for idx = p.idx; idx < p.length; idx++ {
+		if bytes.IndexByte(whitelist, p.buf[idx]) == -1 {
+			p.idx = idx + 1
+			break
+		}
+	}
+	return string(p.buf[idxStart:idx])
+}
+
+// StringHex returns the string at internal pointer that has HEX [0-9a-xA-Z] chars
+func (p *Packet) StringHex() string {
+	return p.StringByWhitelist([]byte("0123456789abcdefABCDEF"))
+}

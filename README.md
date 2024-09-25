@@ -125,6 +125,8 @@ func Example1(buf []byte) {
 * String with single byte length prefix e.g. 0x026566 = "AB"
 * String with uint16 length prefix e.g. 0x00026566 = "AB"
 * String by given delimiter
+* String by a given whitelist
+* String with hex chars `0-9a-zA-Z`
 * ACSII int & uint with detection of end of number being a non-digit
 
 ## ASCII control consts
