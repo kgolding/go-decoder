@@ -92,7 +92,7 @@ func (p *Packet) StringByWhitelist(whitelist []byte) string {
 	var idx int
 	for idx = p.idx; idx < p.length; idx++ {
 		if bytes.IndexByte(whitelist, p.buf[idx]) == -1 {
-			p.idx = idx + 1
+			p.idx = idx
 			break
 		}
 	}
