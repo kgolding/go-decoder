@@ -14,9 +14,10 @@ func (p *Packet) AsciiInt() (v int) {
 		}
 	}()
 
-	for idx := p.idx; idx < p.length; idx++ {
+	var idx int
+	for idx = p.idx; idx < p.length; idx++ {
 		c := p.buf[idx]
-		if idx == p.idx && c == '-' {
+		if idx == p.idx && c == '-' { // Leading "-""
 			negate = true
 		} else {
 			if c >= '0' && c <= '9' {
@@ -24,11 +25,11 @@ func (p *Packet) AsciiInt() (v int) {
 				v = v * 10
 				v += int(c - '0')
 			} else {
-				p.idx = idx
-				return
+				break
 			}
 		}
 	}
+	p.idx = idx
 	return
 }
 
@@ -42,16 +43,17 @@ func (p *Packet) AsciiUInt() (v uint) {
 		}
 	}()
 
-	for idx := p.idx; idx < p.length; idx++ {
+	var idx int
+	for idx = p.idx; idx < p.length; idx++ {
 		c := p.buf[idx]
 		if c >= '0' && c <= '9' {
 			nodata = false
 			v = v * 10
 			v += uint(c - '0')
 		} else {
-			p.idx = idx
-			return
+			break
 		}
 	}
+	p.idx = idx
 	return
 }

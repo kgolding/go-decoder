@@ -43,23 +43,23 @@ func Test_AsciiInt(t *testing.T) {
 		{1, false, []byte{0x31, 0x02, 0x31}},
 	}
 
-	for _, test := range tests {
+	for i, test := range tests {
 		p := New(test.input)
 		f := p.AsciiInt()
 		if test.shouldError && p.Err == nil {
-			t.Errorf("expected err, but got nil: '%s'", string(test.input))
+			t.Errorf("%d: expected err, but got nil: '%s'", i, string(test.input))
 		}
 		if !test.shouldError && p.Err != nil {
-			t.Errorf("got unexpected err: %s: '%s'", p.Err, string(test.input))
+			t.Errorf("%d: got unexpected err: %s: '%s'", i, p.Err, string(test.input))
 		}
 		if f != test.expect {
-			t.Errorf("expected %d got %d: '%s'", test.expect, f, string(test.input))
+			t.Errorf("%d: expected %d got %d: '%s'", i, test.expect, f, string(test.input))
 		}
 		if !test.shouldError { // Check that the idx has been moved forward
 			l := len(fmt.Sprintf("%d", f))
 			q := len(test.input) - len(p.PeekRemainingBytes())
 			if q != l {
-				t.Errorf("expected bytes used to be %d got %d: '%s'", l, q, string(test.input))
+				t.Errorf("%d: expected bytes used to be %d got %d: '%s'", i, l, q, string(test.input))
 			}
 		}
 	}
