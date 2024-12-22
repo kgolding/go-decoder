@@ -8,7 +8,7 @@ but it does not handle variable lenght data as is often seen in over the wire pr
 
 ## Usage
 
-````
+```go
 package main
 
 import (
@@ -111,7 +111,7 @@ func Example1(buf []byte) {
 
 }
 
-````
+```
 
 ## Supported types
 
